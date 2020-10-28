@@ -8,7 +8,8 @@
     "watch": "tsc -w",
     "lint": "npx eslint '*.ts' 'src/**/*.ts'",
     "prettier-format": "prettier --config .prettierrc '*.ts' 'src/**/*.ts' --write",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "local": "node ./output/src/app.js"
   },
   "author": {
     "name": "Leon Li <leon.auxinjeron@gmail.com>",
@@ -26,6 +27,9 @@
     "@aws-cdk/aws-apigateway": "*",
     "@aws-cdk/aws-dynamodb": "*",
     "@aws-cdk/aws-lambda": "*",
-    "@aws-cdk/core": "*"
+    "@aws-cdk/core": "*",
+    "@types/aws-serverless-express": "^3.3.3",
+    "aws-serverless-express": "^3.3.8",
+    "express": "^4.17.1"
   }
 }

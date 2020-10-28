@@ -23,17 +23,17 @@ export class TinyUrlStack extends cdk.Stack {
     const createTinyUrlLambda = new lambda.Function(this, "CreateTinyUrlLambda", {
       code: new lambda.AssetCode("src"),
       handler: "tiny_url.handler",
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.NODEJS_12_X,
       environment: {
         TABLE_NAME: dynamodbTable.tableName,
         PRIMARY_KEY: "tinyUrl",
       },
     });
 
-    const describeTinyUrlLambda = new lambda.Function(this, "DescribeTinyUrlLambda", {
-      code: new lambda.AssetCode("src"),
+    const tinyUrlLambda = new lambda.Function(this, "TinyUrlLambda", {
+      code: new lambda.AssetCode("./output/src"),
       handler: "tiny_url.handler",
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.NODEJS_12_X,
       environment: {
         TABLE_NAME: dynamodbTable.tableName,
         PRIMARY_KEY: "tinyUrl",
@@ -41,7 +41,7 @@ export class TinyUrlStack extends cdk.Stack {
     });
 
     dynamodbTable.grantReadWriteData(createTinyUrlLambda);
-    dynamodbTable.grantReadData(describeTinyUrlLambda);
+    dynamodbTable.grantReadData(tinyUrlLambda);
 
     // Setup the API
     const api = new apigateway.RestApi(this, "TinyUrlApi");
@@ -50,7 +50,7 @@ export class TinyUrlStack extends cdk.Stack {
     addCorsOptions(tinyUrls);
 
     const tinyUrl = tinyUrls.addResource("{tinyUrl}");
-    tinyUrl.addMethod("GET", new apigateway.LambdaIntegration(describeTinyUrlLambda));
+    tinyUrl.addMethod("GET", new apigateway.LambdaIntegration(tinyUrlLambda));
     addCorsOptions(tinyUrl);
   }
 }
