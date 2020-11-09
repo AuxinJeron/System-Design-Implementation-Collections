@@ -9,7 +9,8 @@
     "lint": "npx eslint '*.ts' 'src/**/*.ts'",
     "prettier-format": "prettier --config .prettierrc '*.ts' 'src/**/*.ts' --write",
     "cdk": "cdk",
-    "local": "node ./output/src/app.js"
+    "local": "node ./output/src/app.js",
+    "pack": "webpack --config webpack.config.js"
   },
   "author": {
     "name": "Leon Li <leon.auxinjeron@gmail.com>",
@@ -21,7 +22,10 @@
     "@typescript-eslint/parser": "^4.5.0",
     "eslint": "^7.11.0",
     "prettier": "^2.1.2",
-    "typescript": "^3.7.5"
+    "ts-loader": "^8.0.7",
+    "typescript": "^3.7.5",
+    "webpack": "^5.3.0",
+    "webpack-cli": "^4.1.0"
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "*",
@@ -29,7 +33,16 @@
     "@aws-cdk/aws-lambda": "*",
     "@aws-cdk/core": "*",
     "@types/aws-serverless-express": "^3.3.3",
+    "assert": "^2.0.0",
     "aws-serverless-express": "^3.3.8",
-    "express": "^4.17.1"
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^5.7.0",
+    "crypto-browserify": "^3.12.0",
+    "express": "^4.17.1",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.1.1",
+    "url": "^0.11.0",
+    "util": "^0.12.3"
   }
 }

@@ -13,40 +13,31 @@ export class TinyUrlStack extends cdk.Stack {
         name: "tinyUrl",
         type: dynamodb.AttributeType.STRING,
       },
-      tableName: "TinyUrls",
-      // Retain will not attempt to delete the new table.
-      // It will remain in your account until manually deleted.
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      tableName: "TinyUrls"
     });
 
     // Setup the lambda
-    const createTinyUrlLambda = new lambda.Function(this, "CreateTinyUrlLambda", {
-      code: new lambda.AssetCode("src"),
-      handler: "tiny_url.handler",
-      runtime: lambda.Runtime.NODEJS_12_X,
-      environment: {
-        TABLE_NAME: dynamodbTable.tableName,
-        PRIMARY_KEY: "tinyUrl",
-      },
-    });
-
     const tinyUrlLambda = new lambda.Function(this, "TinyUrlLambda", {
-      code: new lambda.AssetCode("./output/src"),
-      handler: "tiny_url.handler",
-      runtime: lambda.Runtime.NODEJS_12_X,
+      code: new lambda.AssetCode("dist"),
+      handler: "packed_tiny_url.handler",
+      runtime: lambda.Runtime.NODEJS_10_X,
       environment: {
         TABLE_NAME: dynamodbTable.tableName,
         PRIMARY_KEY: "tinyUrl",
       },
     });
 
-    dynamodbTable.grantReadWriteData(createTinyUrlLambda);
     dynamodbTable.grantReadData(tinyUrlLambda);
 
     // Setup the API
-    const api = new apigateway.RestApi(this, "TinyUrlApi");
+    const api = new apigateway.RestApi(this, "TinyUrlApi", {
+      deployOptions: {
+        loggingLevel: apigateway.MethodLoggingLevel.INFO,
+        dataTraceEnabled: true
+      }
+    });
     const tinyUrls = api.root.addResource("tiny_urls");
-    tinyUrls.addMethod("POST", new apigateway.LambdaIntegration(createTinyUrlLambda));
+    tinyUrls.addMethod("POST", new apigateway.LambdaIntegration(tinyUrlLambda));
     addCorsOptions(tinyUrls);
 
     const tinyUrl = tinyUrls.addResource("{tinyUrl}");
