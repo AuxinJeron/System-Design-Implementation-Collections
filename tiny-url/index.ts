@@ -27,7 +27,7 @@ export class TinyUrlStack extends cdk.Stack {
       },
     });
 
-    dynamodbTable.grantReadData(tinyUrlLambda);
+    dynamodbTable.grantReadWriteData(tinyUrlLambda);
 
     // Setup the API
     const api = new apigateway.RestApi(this, "TinyUrlApi", {
